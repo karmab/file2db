@@ -1,6 +1,7 @@
 
 import os
-from sqlalchemy import create_engine, Column, Integer, MetaData, Table, update, insert
+from sqlalchemy import create_engine, Column, Integer, MetaData, Table, update
+from sqlalchemy.orm.session import make_transient
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import mapper, sessionmaker
 import settings
@@ -51,18 +52,33 @@ class File2db:
         metadata = self.metadata
         table = self.table
         key = self.key
+        name = self.name
         content = self.content
         table = Table(table, metadata, Column(key, Integer, primary_key=True), autoload=True)
         mapper(TABLE, table)
+        allentries = session.query(TABLE).all()
+        first = allentries[0]
+        maxid = max([getattr(a, key) for a in allentries])
+        session.expunge(first)
+        make_transient(first)
+        counter = maxid
         for entry in fileslist:
             entrypath = "%s/%s" % (path, entry)
             with open(entrypath, 'r') as f:
                 entrycontent = f.read()
-            u = update(table).where(table.c.name == entry).values({content: entrycontent})
-            session.execute(u)
+            x = [a for a in allentries if getattr(a, name) == entry]
+            if len(x) > 0:
+                u = update(table).where(table.c.name == entry).values({content: entrycontent})
+                session.execute(u)
+            else:
+                counter += counter
+                setattr(first, key, counter)
+                setattr(first, name, entry)
+                setattr(first, content, entrycontent)
+                session.add(first)
+                session.flush()
             session.commit()
-
 
 if __name__ == '__main__':
     conn = File2db()
-    conn.get()
+    conn.post()
