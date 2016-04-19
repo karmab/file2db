@@ -1,84 +1,92 @@
 
+from flask import Flask
 import os
 from sqlalchemy import create_engine, Column, Integer, MetaData, Table, update
 from sqlalchemy.orm.session import make_transient
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import mapper, sessionmaker
-import settings
-import sys
+
+
+app = Flask(__name__)
+app.config.from_object('settings')
 
 
 class TABLE(object):
     pass
 
 
-class File2db:
-    def __init__(self):
-        try:
-            self.table = settings.DATA['table']
-        except KeyError:
-            print 'missing Table from configuration'
-            sys.exit(1)
-        self.path = settings.DATA['path'] if 'path' in settings.DATA.keys() else '.'
-        self.key = settings.DATA['key'] if 'key' in settings.DATA.keys() else 'id'
-        self.name = settings.DATA['name'] if 'name' in settings.DATA.keys() else 'name'
-        self.content = settings.DATA['content'] if 'content' in settings.DATA.keys() else 'content'
-        engine = create_engine(URL(**settings.DATABASE))
-        maker = sessionmaker(bind=engine)
-        self.session = maker()
-        self.metadata = MetaData(engine)
-
-    def get(self):
-        path = self.path
-        session = self.session
-        metadata = self.metadata
-        table = self.table
-        key = self.key
-        name = self.name
-        content = self.content
-        table = Table(table, metadata, Column(key, Integer, primary_key=True), autoload=True)
+@app.route("/get")
+def get():
+    """
+    retrieves files from database definition
+    """
+    table = app.config['DATA']['table']
+    path = app.config['DATA']['path'] if 'path' in app.config['DATA'].keys() else '.'
+    key = app.config['DATA']['key'] if 'key' in app.config['DATA'].keys() else 'id'
+    name = app.config['DATA']['name'] if 'name' in app.config['DATA'].keys() else 'name'
+    content = app.config['DATA']['content'] if 'content' in app.config['DATA'].keys() else 'content'
+    engine = create_engine(URL(**app.config['DATABASE']))
+    maker = sessionmaker(bind=engine)
+    session = maker()
+    metadata = MetaData(engine)
+    table = Table(table, metadata, Column(key, Integer, primary_key=True), autoload=True)
+    try:
         mapper(TABLE, table)
-        results = session.query(TABLE).all()
-        for entry in results:
-            filename = getattr(entry, name)
-            entrypath = "%s/%s" % (path, filename)
-            with open(entrypath, 'w') as f:
-                f.write(getattr(entry, content))
+    except:
+        pass
+    results = session.query(TABLE).all()
+    for entry in results:
+        filename = getattr(entry, name)
+        entrypath = "%s/%s" % (path, filename)
+        with open(entrypath, 'w') as f:
+            f.write(getattr(entry, content))
+    return "GET OK"
 
-    def post(self):
-        path = self.path
-        fileslist = os.listdir(path)
-        session = self.session
-        metadata = self.metadata
-        table = self.table
-        key = self.key
-        name = self.name
-        content = self.content
-        table = Table(table, metadata, Column(key, Integer, primary_key=True), autoload=True)
+
+@app.route("/post")
+def post():
+    """
+    sends files to database
+    :return:
+    """
+    table = app.config['DATA']['table']
+    path = app.config['DATA']['path'] if 'path' in app.config['DATA'].keys() else '.'
+    key = app.config['DATA']['key'] if 'key' in app.config['DATA'].keys() else 'id'
+    name = app.config['DATA']['name'] if 'name' in app.config['DATA'].keys() else 'name'
+    content = app.config['DATA']['content'] if 'content' in app.config['DATA'].keys() else 'content'
+    engine = create_engine(URL(**app.config['DATABASE']))
+    maker = sessionmaker(bind=engine)
+    session = maker()
+    metadata = MetaData(engine)
+    fileslist = os.listdir(path)
+    table = Table(table, metadata, Column(key, Integer, primary_key=True), autoload=True)
+    try:
         mapper(TABLE, table)
-        allentries = session.query(TABLE).all()
-        first = allentries[0]
-        maxid = max([getattr(a, key) for a in allentries])
-        session.expunge(first)
-        make_transient(first)
-        counter = maxid
-        for entry in fileslist:
-            entrypath = "%s/%s" % (path, entry)
-            with open(entrypath, 'r') as f:
-                entrycontent = f.read()
-            x = [a for a in allentries if getattr(a, name) == entry]
-            if len(x) > 0:
-                u = update(table).where(table.c.name == entry).values({content: entrycontent})
-                session.execute(u)
-            else:
-                counter += counter
-                setattr(first, key, counter)
-                setattr(first, name, entry)
-                setattr(first, content, entrycontent)
-                session.add(first)
-                session.flush()
-            session.commit()
+    except:
+        pass
+    allentries = session.query(TABLE).all()
+    first = allentries[0]
+    maxid = max([getattr(a, key) for a in allentries])
+    session.expunge(first)
+    make_transient(first)
+    counter = maxid
+    for entry in fileslist:
+        entrypath = "%s/%s" % (path, entry)
+        with open(entrypath, 'r') as f:
+            entrycontent = f.read()
+        x = [a for a in allentries if getattr(a, name) == entry]
+        if len(x) > 0:
+            u = update(table).where(table.c.name == entry).values({content: entrycontent})
+            session.execute(u)
+        else:
+            counter += counter
+            setattr(first, key, counter)
+            setattr(first, name, entry)
+            setattr(first, content, entrycontent)
+            session.add(first)
+            session.flush()
+        session.commit()
+    return "POST OK"
 
 if __name__ == '__main__':
-    conn = File2db()
-    conn.post()
+    app.run(port=9000, debug=True)
