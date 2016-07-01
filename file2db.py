@@ -8,16 +8,16 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import mapper, sessionmaker
 
 app = Flask(__name__)
-if 'FILE2DBSETTINGS' in os.environ:
-    app.config.from_envvar('FILE2DBSETTINGS')
-else:
-    app.config.from_object('settings')
-debug = app.config['DEBUG'] if 'DEBUG' in app.config['DATA'].keys() else True
+app.config.from_object('settings')
+debug = app.config['DEBUG'] if 'DEBUG' in app.config.keys() else True
+port = app.config['PORT'] if 'PORT'in app.config.keys() else 9000
+
 
 class TABLE(object):
     pass
 
-@app.route("/get")
+
+@app.route("/", methods=['GET'])
 def get():
     """
     retrieves files from database definition
@@ -45,7 +45,7 @@ def get():
     return "GET OK"
 
 
-@app.route("/post")
+@app.route("/", methods=['POST'])
 def post():
     """
     sends files to database
@@ -91,4 +91,4 @@ def post():
     return "POST OK"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9000, debug=debug)
+    app.run(host='0.0.0.0', port=port, debug=debug)
