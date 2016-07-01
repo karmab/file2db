@@ -1,6 +1,5 @@
 ###file2db.py repository
 
-https://travis-ci.org/karmab/file2db.svg?branch=master
 [![Build Status](https://travis-ci.org/karmab/file2db.svg?branch=master)](https://travis-ci.org/karmab/file2db)
 [![Code Climate](https://codeclimate.com/github/karmab/file2db/badges/gpa.svg)](https://codeclimate.com/github/karmab/file2db)
 
