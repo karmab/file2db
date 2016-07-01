@@ -8,7 +8,7 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import mapper, sessionmaker
 
 app = Flask(__name__)
-if 'FILE2DBSETTING' in os.environ:
+if 'FILE2DBSETTINGS' in os.environ:
     app.config.from_envvar('FILE2DBSETTINGS')
 else:
     app.config.from_object('settings')
