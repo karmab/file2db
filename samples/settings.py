@@ -1,5 +1,5 @@
 DEBUG = True
-PORT = 9001
+PORT = 9000
 DATABASE = {
     'drivername': 'postgres',
     'host': '192.168.3.1',
