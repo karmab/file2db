@@ -12,7 +12,7 @@ if 'FILE2DBSETTING' in os.environ:
     app.config.from_envvar('FILE2DBSETTINGS')
 else:
     app.config.from_object('settings')
-debug = app.config['DEBUG'] if 'DEBUG' in app.config['DATA'].keys() else False
+debug = app.config['DEBUG'] if 'DEBUG' in app.config['DATA'].keys() else True
 
 class TABLE(object):
     pass
