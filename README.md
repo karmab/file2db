@@ -27,7 +27,7 @@ docker build --rm -t file2db ./
 #docker run -p 9000:9000 -t -d -i --name=file2db file2db
 
 export FILE2DBSETTINGS=$HOME/file2db/settings.cfg
-docker run -p 9000:9000 -t -d -i --name=file2db -v $HOME/file2db/data:/opt/file2db/data -v $HOME/file2db/settings.cfg:/opt/file2db/settings.cfg file2db
+sudo docker run -p 9000:9000 -t -d -i --name=file2db -v $HOME/file2db/data:/opt/file2db/data -v $HOME/file2db/settings.cfg:/opt/file2db/settings.cfg file2db
 ```
 
 # Problems?
