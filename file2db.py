@@ -7,14 +7,15 @@ from sqlalchemy.orm.session import make_transient
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import mapper, sessionmaker
 
-
 app = Flask(__name__)
-app.config.from_object('settings')
-
+if 'FILE2DBSETTING' in os.environ:
+    app.config.from_envvar('FILE2DBSETTINGS')
+else:
+    app.config.from_object('settings')
+debug = app.config['DEBUG'] if 'DEBUG' in app.config['DATA'].keys() else False
 
 class TABLE(object):
     pass
-
 
 @app.route("/get")
 def get():
@@ -90,4 +91,4 @@ def post():
     return "POST OK"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9000, debug=True)
+    app.run(host='0.0.0.0', port=9000, debug=debug)

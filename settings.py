@@ -1,3 +1,4 @@
+DEBUG = True
 DATABASE = {
     'drivername': 'postgres',
     'host': '192.168.3.1',
@@ -7,7 +8,7 @@ DATABASE = {
     'database': 'testk',
 }
 DATA = {
-    'path': '/Users/kboumedh/prout',
+    'path': '/home/kboumedh/prout',
     'table': 'mytemplates',
     'key': 'id',
     'name': 'name',

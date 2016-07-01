@@ -11,25 +11,25 @@ pip install -r https://raw.githubusercontent.com/karmab/file2db/master/requireme
 ##Contents
 
 -    `README.md` this file
--    `file2db.py`  start/stop/migrate/creates/deletes virtual machines in ovirt/rhev-m of several clients
+-    `file2db.py`  downloads content from a DB table in local files
 -    `extra/Dockerfile`  if it doesnt run as a docker, you re nobody
 
-##How to use
+## How to use
 
 TBD
 
 
-#Docker all the things
+# Docker all the things
 
 ```bash
 cd extra
 docker build --rm -t file2db ./
-docker run -p 9000:9000 -t -d -i --name=file2db file2db
+#docker run -p 9000:9000 -t -d -i --name=file2db file2db
+export FILE2DBSETTINGS=/home/karim/settings.cfg
+docker run -p 9000:9000 -t -d -i --name=file2db -v /home/karim/file2db/data:/opt/file2db/data -v settings.cfg:/opt/file2db/settings.cfg file2db
 ```
 
-
-
-##Problems?
+# Problems?
 
 Send me a mail at [karimboumedhel@gmail.com](mailto:karimboumedhel@gmail.com) !
 
