@@ -28,7 +28,7 @@ except ImportError:
     database['database'] = os.environ.get('DBNAME')
     config['DATABASE'] = database
     config['DEBUG'] = os.environ.get('DEBUG')
-    config['PORT'] = os.environ.get('PORT')
+    config['PORT'] = os.environ.get('PORT', 9000)
 
 debug = config['DEBUG'] if 'DEBUG' in config.keys() else True
 port = int(config['PORT']) if 'PORT'in config.keys() else 9000
