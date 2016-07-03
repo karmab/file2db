@@ -5,4 +5,4 @@
 docker stop file2db
 docker rm file2db
 docker rmi karmab/file2db
-docker build --rm -t karmab/file2db ./
+docker build --rm -t karmab/file2db -f Dockerfile.debian ./

@@ -1,0 +1,13 @@
+FROM alpine:latest
+MAINTAINER Karim Boumedhel <karimboumedhel@gmail.com>
+
+RUN apk add --update musl build-base git py-pip  postgresql-dev python-dev
+RUN rm -rf /var/cache/apk
+RUN pip install -r https://raw.githubusercontent.com/karmab/file2db/master/requirements.txt
+RUN git clone https://github.com/karmab/file2db.git /opt/file2db
+RUN cd  /opt/file2db && git pull
+RUN chmod u+x /opt/file2db/file2db.py
+
+EXPOSE 9000
+
+ENTRYPOINT ["/opt/file2db/file2db.py"]
