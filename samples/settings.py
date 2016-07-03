@@ -9,7 +9,7 @@ DATABASE = {
     'database': 'testk',
 }
 DATA = {
-    'path': '/home/kboumedh/prout',
+    'datapath': '/home/kboumedh/prout',
     'table': 'mytemplates',
     'key': 'id',
     'name': 'name',
