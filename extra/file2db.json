@@ -1,0 +1,300 @@
+{
+    "annotations": {
+        "description": "XXX", 
+        "iconClass": "icon-python", 
+        "tags": "file2db,prout"
+    }, 
+    "apiVersion": "v1", 
+    "kind": "Template", 
+    "label": {
+        "template": "file2db"
+    }, 
+    "metadata": {
+        "creationTimestamp": null, 
+        "name": "file2db"
+    }, 
+    "objects": [
+        {
+            "apiVersion": "v1", 
+            "kind": "Service", 
+            "labels": {
+                "name": "file2db"
+            }, 
+            "metadata": {
+                "name": "file2db-service"
+            }, 
+            "spec": {
+                "portalIP": "", 
+                "ports": [
+                    {
+                        "nodePort": 0, 
+                        "port": 9000, 
+                        "protocol": "TCP", 
+                        "targetPort": 0
+                    }
+                ], 
+                "selector": {
+                    "name": "file2db"
+                }, 
+                "sessionAffinity": "None", 
+                "type": "ClusterIP"
+            }, 
+            "status": {
+                "loadBalancer": {}
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "Route", 
+            "labels": {
+                "name": "file2db"
+            }, 
+            "metadata": {
+                "name": "file2db-route"
+            }, 
+            "spec": {
+                "host": "", 
+                "to": {
+                    "kind": "Service", 
+                    "name": "file2db-service"
+                }
+            }, 
+            "status": {
+                "loadBalancer": {}
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "ReplicationController", 
+            "labels": {
+                "name": "file2db"
+            }, 
+            "metadata": {
+                "label": {
+                    "name": "file2db"
+                }, 
+                "name": "file2db"
+            }, 
+            "spec": {
+                "replicas": 1, 
+                "selector": {
+                    "name": "file2db"
+                }, 
+                "strategy": {
+                    "resources": {}, 
+                    "type": "Recreate"
+                }, 
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null, 
+                        "labels": {
+                            "name": "file2db"
+                        }
+                    }, 
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "DATAPATH", 
+                                        "value": "${DATAPATH}"
+                                    }, 
+                                    {
+                                        "name": "KEY", 
+                                        "value": "${KEY}"
+                                    }, 
+                                    {
+                                        "name": "NAME", 
+                                        "value": "${NAME}"
+                                    }, 
+                                    {
+                                        "name": "DBDRIVER", 
+                                        "value": "${DBDRIVER}"
+                                    }, 
+                                    {
+                                        "name": "DBHOST", 
+                                        "value": "${DBHOST}"
+                                    }, 
+                                    {
+                                        "name": "DBPORT", 
+                                        "value": "${DBPORT}"
+                                    }, 
+                                    {
+                                        "name": "DBUSERNAME", 
+                                        "value": "${DBUSERNAME}"
+                                    }, 
+                                    {
+                                        "name": "DBPASSWORD", 
+                                        "value": "${DBPASSWORD}"
+                                    }, 
+                                    {
+                                        "name": "DBNAME", 
+                                        "value": "${DBNAME}"
+                                    }, 
+                                    {
+                                        "name": "DBTABLE", 
+                                        "value": "${DBTABLE}"
+                                    }, 
+                                    {
+                                        "name": "DEBUG", 
+                                        "value": "${DEBUG}"
+                                    }, 
+                                    {
+                                        "name": "PORT", 
+                                        "value": "${PORT}"
+                                    }, 
+                                    {
+                                        "name": "HOME", 
+                                        "value": "${HOME}"
+                                    }
+                                ], 
+                                "image": "karmab/file2db:latest", 
+                                "imagePullPolicy": "IfNotPresent", 
+                                "name": "file2db", 
+                                "ports": [
+                                    {
+                                        "containerPort": "9000", 
+                                        "protocol": "TCP"
+                                    }
+                                ], 
+                                "securityContext": {
+                                    "privileged": false
+                                }, 
+                                "terminationMessagePath": "/dev/termination-log", 
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/file2db/data", 
+                                        "name": "file2dbdata"
+                                    }
+                                ]
+                            }
+                        ], 
+                        "dnsPolicy": "ClusterFirst", 
+                        "restartPolicy": "Always", 
+                        "volumes": [
+                            {
+                                "name": "file2dbdata", 
+                                "persistentVolumeClaim": {
+                                    "claimName": "file2dbdata"
+                                }
+                            }
+                        ]
+                    }
+                }, 
+                "triggers": [
+                    {
+                        "imageChangeParams": {
+                            "automatic": true, 
+                            "containerNames": [
+                                "file2db"
+                            ], 
+                            "from": {}, 
+                            "lastTriggeredImage": ""
+                        }, 
+                        "type": "ImageChange"
+                    }
+                ]
+            }
+        }, 
+        {
+            "apiVersion": "v1", 
+            "kind": "PersistentVolumeClaim", 
+            "labels": {
+                "name": "file2db"
+            }, 
+            "metadata": {
+                "name": "file2dbdata"
+            }, 
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ], 
+                "resources": {
+                    "requests": {
+                        "storage": "1Gi"
+                    }
+                }
+            }
+        }
+    ], 
+    "parameters": [
+        {
+            "description": "DATAPATH", 
+            "displayName": "DATAPATH", 
+            "name": "DATAPATH", 
+            "value": "/opt/file2db/data"
+        }, 
+        {
+            "description": "KEY", 
+            "displayName": "KEY", 
+            "name": "KEY", 
+            "value": "id"
+        }, 
+        {
+            "description": "NAME", 
+            "displayName": "NAME", 
+            "name": "NAME", 
+            "value": "name"
+        }, 
+        {
+            "description": "DBDRIVER", 
+            "displayName": "DBDRIVER", 
+            "name": "DBDRIVER", 
+            "value": "postgresql"
+        }, 
+        {
+            "description": "DBHOST", 
+            "displayName": "DBHOST", 
+            "name": "DBHOST", 
+            "value": "karmatron.mooo.com"
+        }, 
+        {
+            "description": "DBPORT", 
+            "displayName": "DBPORT", 
+            "name": "DBPORT", 
+            "value": "5432"
+        }, 
+        {
+            "description": "DBUSERNAME", 
+            "displayName": "DBUSERNAME", 
+            "name": "DBUSERNAME", 
+            "value": "testk"
+        }, 
+        {
+            "description": "DBPASSWORD", 
+            "displayName": "DBPASSWORD", 
+            "name": "DBPASSWORD", 
+            "value": "testk"
+        }, 
+        {
+            "description": "DBNAME", 
+            "displayName": "DBNAME", 
+            "name": "DBNAME", 
+            "value": "testk"
+        }, 
+        {
+            "description": "DBTABLE", 
+            "displayName": "DBTABLE", 
+            "name": "DBTABLE", 
+            "value": "mytemplates"
+        }, 
+        {
+            "description": "DEBUG", 
+            "displayName": "DEBUG", 
+            "name": "DEBUG", 
+            "value": "True"
+        }, 
+        {
+            "description": "PORT", 
+            "displayName": "PORT", 
+            "name": "PORT", 
+            "value": "9000"
+        }, 
+        {
+            "description": "HOME", 
+            "displayName": "HOME", 
+            "name": "HOME", 
+            "value": "/tmp"
+        }
+    ]
+}

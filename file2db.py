@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import getpass
+from mock import patch
 from flask import Flask
 import os
 from sqlalchemy import create_engine, Column, Integer, MetaData, Table, update
@@ -112,4 +114,5 @@ def post():
     return "POST OK"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    with patch.object(getpass, "getuser", return_value='default'):    
+        app.run(host='0.0.0.0', port=port, debug=debug)
