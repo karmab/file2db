@@ -48,7 +48,7 @@ docker build --rm -t file2db ./
 # Use settings.py.docker from samples dir and rename it settings.py somewhere. For instance,
 docker run -p 9000:9000 -t -d -i --name=file2db -v $HOME/file2db/data:/opt/file2db/data -v $HOME/file2db/settings.py:/opt/file2db/settings.py karmab/file2db
 # For env variables launch
-docker run -p 9000:9000 -t -d -i --name=file2db -v $HOME/file2db/data:/opt/file2db/data -e KEY=id -e NAME=name -e CONTENT=content -e DBDRIVER=postgresql -e DBHOST=192.168.3.1 -e DBPORT=5432 -e DBUSERNAME=testk -e DBPASSWORD=testk -e DBNAME=testk -e TABLE=mytemplates -e PORT=9000 -e DEBUG=True -e DATAPATH=/opt/file2db/data karmab/file2db
+docker run -p 9000:9000 -t -d -i --name=file2db -v $HOME/file2db/data:/opt/file2db/data -e KEY=id -e NAME=name -e CONTENT=content -e DBDRIVER=postgresql -e DBHOST=192.168.3.1 -e DBPORT=5432 -e DBUSERNAME=testk -e DBPASSWORD=testk -e DBNAME=testk -e DBTABLE=mytemplates -e PORT=9000 -e DEBUG=True -e DATAPATH=/opt/file2db/data karmab/file2db
 
 ```
 

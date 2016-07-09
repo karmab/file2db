@@ -1,7 +1,7 @@
 export DEBUG=True
 export PORT=9000
 export DBDRIVER=postgresql
-export DBHOST=192.168.3.1
+export DBHOST=192.168.0.7
 export DBPORT=5432
 export DBUSERNAME=testk
 export DBPASSWORD=testk

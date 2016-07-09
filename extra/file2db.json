@@ -100,6 +100,10 @@
                                         "value": "${DATAPATH}"
                                     }, 
                                     {
+                                        "name": "CONTENT", 
+                                        "value": "${CONTENT}"
+                                    }, 
+                                    {
                                         "name": "KEY", 
                                         "value": "${KEY}"
                                     }, 
@@ -223,6 +227,12 @@
             "displayName": "DATAPATH", 
             "name": "DATAPATH", 
             "value": "/opt/file2db/data"
+        }, 
+        {
+            "description": "DATAPATH", 
+            "displayName": "CONTENT", 
+            "name": "CONTENT", 
+            "value": "content"
         }, 
         {
             "description": "KEY", 

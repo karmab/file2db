@@ -15,7 +15,6 @@ try:
     config = app.config
 except ImportError:
     data = {}
-    data['table'] = os.environ.get('TABLE')
     data['datapath'] = os.environ.get('DATAPATH')
     data['id'] = os.environ.get('ID')
     data['name'] = os.environ.get('NAME')
@@ -28,6 +27,7 @@ except ImportError:
     database['username'] = os.environ.get('DBUSERNAME')
     database['password'] = os.environ.get('DBPASSWORD')
     database['database'] = os.environ.get('DBNAME')
+    data['table'] = os.environ.get('DBTABLE')
     config['DATABASE'] = database
     config['DEBUG'] = os.environ.get('DEBUG')
     config['PORT'] = os.environ.get('PORT', 9000)
