@@ -114,5 +114,5 @@ def post():
     return "POST OK"
 
 if __name__ == '__main__':
-    with patch.object(getpass, "getuser", return_value='default'):    
+    with patch.object(getpass, "getuser", return_value='default'):
         app.run(host='0.0.0.0', port=port, debug=debug)
